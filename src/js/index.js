@@ -1,28 +1,46 @@
+import { elements } from './base';
 
 console.log('Fetching items');
 
-async function getDragon(url) {
+
+
+async function getDragon() {
+    const url = "http://ddragon.leagueoflegends.com/cdn/9.24.2/data/en_US/item.json";
+    const itemKeyList = new Array();
     try {
         const res = await fetch(url);    
         const myJson = await res.json();
         const itemList = myJson.data;
-        console.log(itemList);
+        for (var key in itemList) {
+            if (itemList.hasOwnProperty(key)) {
+                itemKeyList.push(key);
+            }
+        }
     } catch (error) {
         console.log(error);
     }
+
+    return itemKeyList;
 }
 
-async function getImage(url) {
-    try {
-        const res = await fetch(url);    
-    
-        console.log(res);
-    } catch (error) {
-        console.log(error);
+function addImage(id) {
+    const url = `../../img/item/${id}.png`;
+    const markup = `
+        <li class="image__item">
+            <img src="${url}">
+        </li>
+    `;
+    elements.itemImages.insertAdjacentHTML('beforeend', markup);
+}
+
+const add1000Images = (array) => {
+    for (let i = 0; i < array.length; i ++) {
+        addImage(i);
     }
 }
 
-//getDragon('http://ddragon.leagueoflegends.com/cdn/9.24.2/data/en_US/item.json');
+const array = getDragon();
+console.log(array);
+add1000Images(array);
 
-getImage('http://ddragon.leagueoflegends.com/cdn/9.24.2/img/item/1001.png');
 
